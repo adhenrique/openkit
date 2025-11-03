@@ -13,6 +13,7 @@ use OpenKit\OpenKitBuilder;
  * @method static OpenKitBuilder defineTag(string $name, string $description)
  * @method static OpenKitBuilder defineBearerAuth(string $name = 'bearerAuth', string $bearerFormat = 'JWT')
  * @method static OpenKitBuilder defineApiKeyHeader(string $name = 'apiKey', string $headerName = 'X-API-KEY')
+ * @method static OpenKitBuilder defineSchema(string $name, array $schema)
  * @method static array generate()
  */
 class OpenKit extends Facade

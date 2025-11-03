@@ -9,6 +9,7 @@ class OpenKitBuilder
     protected array $tags = [];
     protected array $paths = [];
     protected array $securitySchemes = [];
+    protected array $schemas = [];
 
     public function defineTag(string $name, string $description): self
     {
@@ -26,6 +27,12 @@ class OpenKitBuilder
         $this->paths[$openapiUri][strtolower($method)] = $operationBuilder;
 
         return $operationBuilder;
+    }
+
+    public function defineSchema(string $name, array $schema): self
+    {
+        $this->schemas[$name] = $schema;
+        return $this;
     }
 
     public function defineSecurityScheme(string $name, array $definition): self
@@ -64,10 +71,15 @@ class OpenKitBuilder
             ],
             'tags' => $this->tags,
             'paths' => [],
+            'components' => [],
         ];
 
         if (!empty($this->securitySchemes)) {
             $spec['components']['securitySchemes'] = $this->securitySchemes;
+        }
+
+        if (!empty($this->schemas)) {
+            $spec['components']['schemas'] = $this->schemas;
         }
 
         foreach ($this->paths as $uri => $methods) {
