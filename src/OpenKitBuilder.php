@@ -8,6 +8,7 @@ class OpenKitBuilder
 {
     protected array $tags = [];
     protected array $paths = [];
+    protected array $securitySchemes = [];
 
     public function defineTag(string $name, string $description): self
     {
@@ -27,6 +28,32 @@ class OpenKitBuilder
         return $operationBuilder;
     }
 
+    public function defineSecurityScheme(string $name, array $definition): self
+    {
+        $this->securitySchemes[$name] = $definition;
+        return $this;
+    }
+
+    public function defineBearerAuth(string $name = 'bearerAuth', string $bearerFormat = 'JWT'): self
+    {
+        $this->securitySchemes[$name] = [
+            'type' => 'http',
+            'scheme' => 'bearer',
+            'bearerFormat' => $bearerFormat,
+        ];
+        return $this;
+    }
+
+    public function defineApiKeyHeader(string $name = 'apiKey', string $headerName = 'X-API-KEY'): self
+    {
+        $this->securitySchemes[$name] = [
+            'type' => 'apiKey',
+            'in' => 'header',
+            'name' => $headerName,
+        ];
+        return $this;
+    }
+
     public function generate(): array
     {
         $spec = [
@@ -38,6 +65,10 @@ class OpenKitBuilder
             'tags' => $this->tags,
             'paths' => [],
         ];
+
+        if (!empty($this->securitySchemes)) {
+            $spec['components']['securitySchemes'] = $this->securitySchemes;
+        }
 
         foreach ($this->paths as $uri => $methods) {
             foreach ($methods as $method => $operationBuilder) {

@@ -4,18 +4,15 @@ namespace OpenKit\Builders;
 
 class OperationBuilder
 {
-    protected array $data = [];
-
-    public function __construct(string $uri, string $method)
-    {
-        $this->data = [
-            'tags' => [],
-            'summary' => '',
-            'description' => '',
-            'parameters' => [],
-            'responses' => [],
-        ];
-    }
+    protected array $data = [
+        'tags' => [],
+        'summary' => '',
+        'description' => '',
+        'parameters' => [],
+        'responses' => [],
+        'requestBody' => null,
+        'security' => [],
+    ];
 
     public function tag(string $tagName): self
     {
@@ -47,9 +44,25 @@ class OperationBuilder
 
     public function withResponse(int $status, callable $callback): self
     {
-        $responseBuilder = new ResponseBuilder($status);
+        $responseBuilder = new ResponseBuilder();
         $callback($responseBuilder);
         $this->data['responses'][(string) $status] = $responseBuilder->build();
+        return $this;
+    }
+
+    public function withRequestBody(callable $callback): self
+    {
+        $requestBodyBuilder = new RequestBodyBuilder();
+        $callback($requestBodyBuilder);
+        $this->data['requestBody'] = $requestBodyBuilder->build();
+        return $this;
+    }
+
+    public function securedBy(string $schemeName, array $scopes = []): self
+    {
+        $this->data['security'][] = [
+            $schemeName => $scopes
+        ];
         return $this;
     }
 
