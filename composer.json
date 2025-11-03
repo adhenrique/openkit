@@ -56,8 +56,8 @@
       "@php composer audit"
     ],
     "lint-staged": [
-      "git diff --name-only --cached --diff-filter=ACM | xargs -r ./vendor/bin/pint --test",
-      "git diff --name-only --cached --diff-filter=ACM | xargs -r ./vendor/bin/phpstan analyse"
+      "git diff --name-only --cached --diff-filter=ACM | grep -E '\\.php$' | xargs -r ./vendor/bin/pint --test",
+      "git diff --name-only --cached --diff-filter=ACM | grep -E '\\.php$' | xargs -r ./vendor/bin/phpstan analyse"
     ]
   },
   "script-descriptions": {
