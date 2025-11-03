@@ -2,46 +2,50 @@
 
 namespace OpenKit\Tests\Feature;
 
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\File;
 use OpenKit\Tests\TestCase;
 
 class DocsRouteTest extends TestCase
 {
-    public function test_it_generates_json_file_via_command()
+    public function test_it_loads_the_documentation_ui_route_correctly()
     {
-        $jsonFile = config('openkit.json_file_name', 'openapi.json');
-        $path = public_path($jsonFile);
+        // 1. ARRANGE
+        // Pega os valores da config que definimos no TestCase
+        $routePrefix = config('openkit.path'); // 'openkit-test-docs'
+        $expectedTitle = config('openkit.ui.title'); // 'Minha API de Teste (UI)'
+        $expectedJsonUrl = asset(config('openkit.json_file_name')); // 'http://localhost/api-test.json'
+        $expectedCdnUrl = config('openkit.ui.cdn_url'); // 'https://fake-cdn-url.com'
 
-        if (File::exists($path)) {
-            File::delete($path);
-        }
+        // 2. ACT
+        // Acessa a rota (ex: /openkit-test-docs/docs)
+        $response = $this->get("/{$routePrefix}/docs");
 
-        $this->assertFalse(File::exists($path));
+        // 3. ASSERT
 
-        Artisan::call('openkit:generate');
+        // A rota respondeu com 200 OK?
+        $response->assertStatus(200);
 
-        $this->assertTrue(File::exists($path));
+        // A view correta foi carregada? (namespace::view)
+        $response->assertViewIs('openkit::index');
 
-        $content = File::get($path);
-        $this->assertJson($content);
+        // O título da config está no HTML?
+        $response->assertSee($expectedTitle);
 
-        $data = json_decode($content, true);
-        $this->assertEquals('3.0.3', $data['openapi']);
-        $this->assertArrayHasKey('info', $data);
-        $this->assertArrayHasKey('paths', $data);
+        // O container da UI do Swagger está no HTML?
+        // (usamos 'false' para não escapar o HTML na busca)
+        $response->assertSee('id="swagger-ui"', false);
 
-        File::delete($path);
+        // A URL do JSON (lida da config) está no script?
+        $response->assertSee($expectedJsonUrl);
+
+        // A URL do CDN (lida da config) está no <link>?
+        $response->assertSee($expectedCdnUrl);
     }
 
-    public function test_it_can_access_the_docs_ui_route()
+    public function test_it_returns_404_for_non_existing_docs_routes()
     {
-        $uiPath = config('openkit.path', 'openkit').'/docs';
+        // Acessa uma rota que não existe no nosso pacote
+        $response = $this->get('/openkit-test-docs/outra-coisa');
 
-        $response = $this->get($uiPath);
-
-        $response->assertStatus(200);
-        $response->assertViewIs('openkit::index');
-        $response->assertSee('swagger-ui');
+        $response->assertStatus(404);
     }
 }

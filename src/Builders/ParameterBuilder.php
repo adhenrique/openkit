@@ -7,9 +7,11 @@ class ParameterBuilder
     protected array $data = [
         'name' => '',
         'in' => '',
-        'description' => '',
+        'description' => null,
         'required' => false,
-        'schema' => [],
+        'schema' => null,
+        'deprecated' => null,
+        'example' => null,
     ];
 
     public function __construct(string $name, string $in)
@@ -63,7 +65,7 @@ class ParameterBuilder
     public function build(): array
     {
         // Garante que o schema não fique vazio se não for definido
-        if (empty($this->data['schema'])) {
+        if (is_null($this->data['schema'])) {
             // Define um schema padrão 'string' se nenhum for fornecido
             $this->data['schema'] = ['type' => 'string'];
         }

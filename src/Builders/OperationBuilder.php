@@ -5,17 +5,22 @@ namespace OpenKit\Builders;
 class OperationBuilder
 {
     protected array $data = [
-        'tags' => [],
-        'summary' => '',
-        'description' => '',
-        'parameters' => [],
-        'responses' => [],
+        'tags' => null,
+        'summary' => null,
+        'description' => null,
+        'operationId' => null,
+        'deprecated' => null,
+        'parameters' => null,
         'requestBody' => null,
-        'security' => [],
+        'responses' => null, // Respostas são obrigatórias, mas validadas no OpenKitBuilder
+        'security' => null,
     ];
 
     public function tag(string $tagName): self
     {
+        if (is_null($this->data['tags'])) {
+            $this->data['tags'] = [];
+        }
         $this->data['tags'][] = $tagName;
 
         return $this;
@@ -35,8 +40,26 @@ class OperationBuilder
         return $this;
     }
 
+    public function operationId(string $operationId): self
+    {
+        $this->data['operationId'] = $operationId;
+
+        return $this;
+    }
+
+    public function deprecated(bool $deprecated = true): self
+    {
+        $this->data['deprecated'] = $deprecated;
+
+        return $this;
+    }
+
     public function withParameter(string $name, string $in, callable $callback): self
     {
+        if (is_null($this->data['parameters'])) {
+            $this->data['parameters'] = [];
+        }
+
         $paramBuilder = new ParameterBuilder($name, $in);
 
         $callback($paramBuilder);
@@ -48,6 +71,10 @@ class OperationBuilder
 
     public function withResponse(int $status, callable $callback): self
     {
+        if (is_null($this->data['responses'])) {
+            $this->data['responses'] = [];
+        }
+
         $responseBuilder = new ResponseBuilder;
         $callback($responseBuilder);
         $this->data['responses'][(string) $status] = $responseBuilder->build();
@@ -66,6 +93,10 @@ class OperationBuilder
 
     public function securedBy(string $schemeName, array $scopes = []): self
     {
+        if (is_null($this->data['security'])) {
+            $this->data['security'] = [];
+        }
+
         $this->data['security'][] = [
             $schemeName => $scopes,
         ];
@@ -75,6 +106,6 @@ class OperationBuilder
 
     public function build(): array
     {
-        return array_filter($this->data);
+        return array_filter($this->data, fn ($value) => ! is_null($value));
     }
 }

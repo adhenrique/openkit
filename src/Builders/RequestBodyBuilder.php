@@ -5,9 +5,9 @@ namespace OpenKit\Builders;
 class RequestBodyBuilder
 {
     protected array $data = [
-        'description' => '',
+        'description' => null,
         'required' => false,
-        'content' => [],
+        'content' => null,
     ];
 
     public function __construct()
@@ -60,12 +60,12 @@ class RequestBodyBuilder
     public function build(): array
     {
         // Em um RequestBody, o 'content' é obrigatório.
-        if (empty($this->data['content'])) {
+        if (is_null($this->data['content'])) {
             throw new \InvalidArgumentException(
                 'O corpo da requisição (requestBody) deve ter pelo menos um tipo de "content" (ex: jsonContent).'
             );
         }
 
-        return array_filter($this->data);
+        return array_filter($this->data, fn ($value) => ! is_null($value));
     }
 }
