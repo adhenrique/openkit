@@ -1,0 +1,65 @@
+{
+  "name": "openkit/openkit",
+  "description": "Uma biblioteca elegante com interface fluente para gerar documentação OpenAPI (Swagger) em aplicações Laravel.",
+  "keywords": [
+    "laravel",
+    "openapi",
+    "swagger",
+    "docs",
+    "api",
+    "documentation",
+    "fluent"
+  ],
+  "type": "laravel-package",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "AD henrique",
+      "email": "eu@adhenrique.com.br"
+    }
+  ],
+  "require": {
+    "php": "^8.2",
+    "illuminate/support": "^10.0 | ^11.0",
+    "illuminate/routing": "^10.0 | ^11.0",
+    "illuminate/console": "^10.0 | ^11.0",
+    "illuminate/view": "^10.0 | ^11.0",
+    "illuminate/filesystem": "^10.0 | ^11.0"
+  },
+  "require-dev": {
+    "orchestra/testbench": "^9.0",
+    "phpunit/phpunit": "^11.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "OpenKit\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "OpenKit\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit",
+    "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+  },
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "OpenKit\\OpenKitServiceProvider"
+      ],
+      "aliases": {
+        "OpenKit": "OpenKit\\Facades\\OpenKit"
+      }
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
