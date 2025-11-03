@@ -35,6 +35,16 @@ class RequestBodyBuilder
         return $this;
     }
 
+    public function multipartFormData(array $properties): self
+    {
+        $schema = [
+            'type' => 'object',
+            'properties' => $properties
+        ];
+
+        return $this->content('multipart/form-data', $schema);
+    }
+
     public function content(string $mimeType, array $schema): self
     {
         $this->data['content'][$mimeType] = [
