@@ -26,6 +26,7 @@ class ParameterBuilder
     public function description(string $description): self
     {
         $this->data['description'] = $description;
+
         return $this;
     }
 
@@ -34,24 +35,28 @@ class ParameterBuilder
         if ($this->data['in'] !== 'path') {
             $this->data['required'] = $required;
         }
+
         return $this;
     }
 
     public function schema(array $schema): self
     {
         $this->data['schema'] = $schema;
+
         return $this;
     }
 
     public function deprecated(bool $deprecated = true): self
     {
         $this->data['deprecated'] = $deprecated;
+
         return $this;
     }
 
     public function example(mixed $example): self
     {
         $this->data['example'] = $example;
+
         return $this;
     }
 
@@ -63,6 +68,6 @@ class ParameterBuilder
             $this->data['schema'] = ['type' => 'string'];
         }
 
-        return array_filter($this->data, fn ($value) => !is_null($value));
+        return array_filter($this->data, fn ($value) => ! is_null($value));
     }
 }

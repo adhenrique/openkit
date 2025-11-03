@@ -36,7 +36,7 @@ class DocsRouteTest extends TestCase
 
     public function test_it_can_access_the_docs_ui_route()
     {
-        $uiPath = config('openkit.path', 'openkit') . '/docs';
+        $uiPath = config('openkit.path', 'openkit').'/docs';
 
         $response = $this->get($uiPath);
 

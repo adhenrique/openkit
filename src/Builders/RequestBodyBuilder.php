@@ -18,20 +18,23 @@ class RequestBodyBuilder
     public function description(string $description): self
     {
         $this->data['description'] = $description;
+
         return $this;
     }
 
     public function required(bool $required = true): self
     {
         $this->data['required'] = $required;
+
         return $this;
     }
 
     public function jsonContent(array $schema): self
     {
         $this->data['content']['application/json'] = [
-            'schema' => $schema
+            'schema' => $schema,
         ];
+
         return $this;
     }
 
@@ -39,7 +42,7 @@ class RequestBodyBuilder
     {
         $schema = [
             'type' => 'object',
-            'properties' => $properties
+            'properties' => $properties,
         ];
 
         return $this->content('multipart/form-data', $schema);
@@ -48,8 +51,9 @@ class RequestBodyBuilder
     public function content(string $mimeType, array $schema): self
     {
         $this->data['content'][$mimeType] = [
-            'schema' => $schema
+            'schema' => $schema,
         ];
+
         return $this;
     }
 

@@ -9,6 +9,7 @@ use OpenKit\Facades\OpenKit;
 class GenerateDocsCommand extends Command
 {
     protected $signature = 'openkit:generate';
+
     protected $description = 'Gera o arquivo openapi.json com base nas definições.';
 
     public function handle()
@@ -24,7 +25,7 @@ class GenerateDocsCommand extends Command
             File::put($path, $json);
             $this->info("Documentação salva com sucesso em: {$path}");
         } catch (\Exception $e) {
-            $this->error("Não foi possível salvar o arquivo: " . $e->getMessage());
+            $this->error('Não foi possível salvar o arquivo: '.$e->getMessage());
         }
 
         return 0;

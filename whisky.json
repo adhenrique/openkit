@@ -1,0 +1,9 @@
+{
+  "disabled": [],
+  "hooks": {
+    "pre-commit": [
+      "composer lint-staged",
+      "composer audit"
+    ]
+  }
+}

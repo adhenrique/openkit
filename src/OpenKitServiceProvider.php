@@ -11,7 +11,7 @@ class OpenKitServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(OpenKitBuilder::class, function ($app) {
-            return new OpenKitBuilder();
+            return new OpenKitBuilder;
         });
 
         $this->app->alias(OpenKitBuilder::class, 'openkit.builder');

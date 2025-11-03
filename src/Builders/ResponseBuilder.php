@@ -18,14 +18,16 @@ class ResponseBuilder
     public function description(string $description): self
     {
         $this->data['description'] = $description;
+
         return $this;
     }
 
     public function jsonContent(array $schema): self
     {
         $this->data['content']['application/json'] = [
-            'schema' => $schema
+            'schema' => $schema,
         ];
+
         return $this;
     }
 
@@ -33,17 +35,19 @@ class ResponseBuilder
     {
         $mediaTypeObject = ['schema' => $schema];
 
-        if (!empty($examples)) {
+        if (! empty($examples)) {
             $mediaTypeObject['examples'] = $examples;
         }
 
         $this->data['content'][$mimeType] = $mediaTypeObject;
+
         return $this;
     }
 
     public function header(string $name, array $headerDefinition): self
     {
         $this->data['headers'][$name] = $headerDefinition;
+
         return $this;
     }
 

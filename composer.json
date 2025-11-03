@@ -42,7 +42,27 @@
   },
   "scripts": {
     "test": "vendor/bin/phpunit",
-    "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+    "test-coverage": "vendor/bin/phpunit --coverage-html coverage",
+    "post-install-cmd": [
+      "whisky update"
+    ],
+    "post-update-cmd": [
+      "whisky update"
+    ],
+    "tests": [
+      "./vendor/bin/phpunit",
+      "./vendor/bin/pint --test",
+      "./vendor/bin/phpstan analyse",
+      "@php composer audit"
+    ],
+    "lint-staged": [
+      "git diff --name-only --cached --diff-filter=ACM | xargs -r ./vendor/bin/pint --test",
+      "git diff --name-only --cached --diff-filter=ACM | xargs -r ./vendor/bin/phpstan analyse"
+    ]
+  },
+  "script-descriptions": {
+    "tests": "Runs code quality checks: Pint formatting test, PHPStan static analysis, and Composer audit for dependency vulnerabilities.",
+    "lint-staged": "Runs Pint and PHPStan only on staged files (typically used in pre-commit hooks)."
   },
   "config": {
     "sort-packages": true,

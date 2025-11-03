@@ -20,8 +20,6 @@ class OpenKit extends Facade
 {
     /**
      * Obtém o nome do componente registrado no Service Container.
-     *
-     * @return string
      */
     protected static function getFacadeAccessor(): string
     {

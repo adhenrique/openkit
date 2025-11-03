@@ -17,7 +17,7 @@ return [
     'definitions' => base_path('routes/openkit.php'),
 
     'ui' => [
-        'title' => env('APP_NAME', 'Laravel API') . ' Docs',
+        'title' => env('APP_NAME', 'Laravel API').' Docs',
         'cdn_url' => 'https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.9.0',
     ],
 ];

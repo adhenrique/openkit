@@ -7,22 +7,26 @@ use OpenKit\Builders\OperationBuilder;
 class OpenKitBuilder
 {
     protected array $tags = [];
+
     protected array $paths = [];
+
     protected array $securitySchemes = [];
+
     protected array $schemas = [];
 
     public function defineTag(string $name, string $description): self
     {
         $this->tags[] = ['name' => $name, 'description' => $description];
+
         return $this;
     }
 
     public function path(string $uri, string $method): OperationBuilder
     {
         // Garante que a URI segue o padrão OpenAPI (ex: /users/{id})
-        $openapiUri = preg_replace('/\{([a-zA-Z0-9_]+)\}/', '{$1}', $uri);
+        $openapiUri = preg_replace('/\{([a-zA-Z0-9_]+)}/', '{$1}', $uri);
 
-        $operationBuilder = new OperationBuilder($uri, $method);
+        $operationBuilder = new OperationBuilder;
 
         $this->paths[$openapiUri][strtolower($method)] = $operationBuilder;
 
@@ -32,12 +36,14 @@ class OpenKitBuilder
     public function defineSchema(string $name, array $schema): self
     {
         $this->schemas[$name] = $schema;
+
         return $this;
     }
 
     public function defineSecurityScheme(string $name, array $definition): self
     {
         $this->securitySchemes[$name] = $definition;
+
         return $this;
     }
 
@@ -48,6 +54,7 @@ class OpenKitBuilder
             'scheme' => 'bearer',
             'bearerFormat' => $bearerFormat,
         ];
+
         return $this;
     }
 
@@ -58,6 +65,7 @@ class OpenKitBuilder
             'in' => 'header',
             'name' => $headerName,
         ];
+
         return $this;
     }
 
@@ -67,18 +75,18 @@ class OpenKitBuilder
             'openapi' => '3.0.3',
             'info' => config('openkit.info'),
             'servers' => [
-                ['url' => url('/'), 'description' => 'Servidor Principal']
+                ['url' => url('/'), 'description' => 'Servidor Principal'],
             ],
             'tags' => $this->tags,
             'paths' => [],
             'components' => [],
         ];
 
-        if (!empty($this->securitySchemes)) {
+        if (! empty($this->securitySchemes)) {
             $spec['components']['securitySchemes'] = $this->securitySchemes;
         }
 
-        if (!empty($this->schemas)) {
+        if (! empty($this->schemas)) {
             $spec['components']['schemas'] = $this->schemas;
         }
 

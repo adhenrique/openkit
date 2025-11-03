@@ -17,18 +17,21 @@ class OperationBuilder
     public function tag(string $tagName): self
     {
         $this->data['tags'][] = $tagName;
+
         return $this;
     }
 
     public function summary(string $summary): self
     {
         $this->data['summary'] = $summary;
+
         return $this;
     }
 
     public function description(string $description): self
     {
         $this->data['description'] = $description;
+
         return $this;
     }
 
@@ -39,30 +42,34 @@ class OperationBuilder
         $callback($paramBuilder);
 
         $this->data['parameters'][] = $paramBuilder->build();
+
         return $this;
     }
 
     public function withResponse(int $status, callable $callback): self
     {
-        $responseBuilder = new ResponseBuilder();
+        $responseBuilder = new ResponseBuilder;
         $callback($responseBuilder);
         $this->data['responses'][(string) $status] = $responseBuilder->build();
+
         return $this;
     }
 
     public function withRequestBody(callable $callback): self
     {
-        $requestBodyBuilder = new RequestBodyBuilder();
+        $requestBodyBuilder = new RequestBodyBuilder;
         $callback($requestBodyBuilder);
         $this->data['requestBody'] = $requestBodyBuilder->build();
+
         return $this;
     }
 
     public function securedBy(string $schemeName, array $scopes = []): self
     {
         $this->data['security'][] = [
-            $schemeName => $scopes
+            $schemeName => $scopes,
         ];
+
         return $this;
     }
 
