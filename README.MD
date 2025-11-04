@@ -45,9 +45,9 @@ Isso criará o arquivo config/openkit.php, onde você pode definir:
 <?php
 
 use OpenKit\Facades\OpenKit;
-use OpenKit\Builders\Parameter;
-use OpenKit\Builders\Response;
-use OpenKit\Builders\RequestBody;
+use OpenKit\Builders\ParameterBuilder;
+use OpenKit\Builders\ResponseBuilder;
+use OpenKit\Builders\RequestBodyBuilder;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,17 +87,17 @@ OpenKit::path('/api/users/{id}', 'get')
     ->operationId('getUserById')
     ->securedBy('bearerAuth') // Aplica a segurança definida acima
     
-    ->withParameter('id', 'path', function (Parameter $param) {
+    ->withParameter('id', 'path', function (ParameterBuilder $param) {
         $param->description('ID do usuário')
               ->schema(['type' => 'integer']); // 'required' é automático para 'path'
     })
     
-    ->withResponse(200, function (Response $res) {
+    ->withResponse(200, function (ResponseBuilder $res) {
         $res->description('Usuário encontrado')
              // Usa um schema reutilizável
             ->jsonContent(['$ref' => '#/components/schemas/User']);
     })
-    ->withResponse(404, function (Response $res) {
+    ->withResponse(404, function (ResponseBuilder $res) {
         $res->description('Usuário não encontrado');
     });
 
@@ -107,14 +107,14 @@ OpenKit::path('/api/users', 'post')
     ->summary('Criar um novo usuário')
     ->securedBy('bearerAuth')
     
-    ->withRequestBody(function (RequestBody $body) {
+    ->withRequestBody(function (RequestBodyBuilder $body) {
         $body->required()
              ->description('Dados do novo usuário')
              // Usa o mesmo schema, mas você também pode definir inline
              ->jsonContent(['$ref' => '#/components/schemas/User']);
     })
     
-    ->withResponse(201, function (Response $res) {
+    ->withResponse(201, function (ResponseBuilder $res) {
         $res->description('Usuário criado com sucesso')
             ->jsonContent(['$ref' => '#/components/schemas/User']);
     });
@@ -158,7 +158,7 @@ Métodos disponíveis após chamar `OpenKit::path(...)`.
   - `$callback`: Recebe um `ParameterBuilder`.
 
 ```php
-->withParameter('status', 'query', function (Parameter $param) {
+->withParameter('status', 'query', function (ParameterBuilder $param) {
     $param->description('Filtra por status')
           ->required(false) // Opcional para 'query'
           ->schema([
@@ -174,7 +174,7 @@ Métodos do `ParameterBuilder`: `description()`, `required()`, `deprecated()`, `
   - `$callback`: Recebe um `RequestBodyBuilder`.
 
 ```php
-->withRequestBody(function (RequestBody $body) {
+->withRequestBody(function (RequestBodyBuilder $body) {
     $body->required()
          ->description('Payload do usuário');
 
@@ -199,7 +199,7 @@ Métodos do `RequestBodyBuilder`: `description()`, `required()`, `jsonContent(ar
   - `$callback`: Recebe um `ResponseBuilder`.
 
 ```php
-->withResponse(200, function (Response $res) {
+->withResponse(200, function (ResponseBuilder $res) {
     $res->description('Operação bem-sucedida')
         ->jsonContent(['$ref' => '#/components/schemas/User'])
         ->header('X-Rate-Limit', [
@@ -208,7 +208,7 @@ Métodos do `RequestBodyBuilder`: `description()`, `required()`, `jsonContent(ar
         ]);
 })
 
-->withResponse(404, function (Response $res) {
+->withResponse(404, function (ResponseBuilder $res) {
     // Respostas sem conteúdo só precisam de descrição
     $res->description('Não encontrado');
 })

@@ -8,6 +8,9 @@
         html { box-sizing: border-box; }
         *, *:before, *:after { box-sizing: inherit; }
         body { margin: 0; background: #fafafa; }
+        .swagger-ui .topbar .download-url-wrapper {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
