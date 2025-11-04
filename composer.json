@@ -1,5 +1,5 @@
 {
-  "name": "openkit/openkit",
+  "name": "adhenrique/openkit",
   "description": "Uma biblioteca elegante com interface fluente para gerar documentação OpenAPI (Swagger) em aplicações Laravel.",
   "keywords": [
     "laravel",

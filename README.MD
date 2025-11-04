@@ -18,7 +18,7 @@ Com OpenKit, você define sua API em um local central (`routes/openkit.php`) usa
 ### 📦 Instalação
 Você pode instalar o pacote via Composer:
 ```bash
-composer require openkit/openkit
+composer require adhenrique/openkit
 ```
 #### Configuração
 O OpenKit usa o Package Auto-Discovery do Laravel. O `ServiceProvider` e a `Facade` serão registrados automaticamente.
