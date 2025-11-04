@@ -5,9 +5,10 @@ parameters:
     paths:
         - src/
         - tests/
+        - config/
+        - resources/
+        - routes/
     # Level 10 is the highest level
     level: 5
     excludePaths:
-        - .docker
-        - .github
         - vendor
