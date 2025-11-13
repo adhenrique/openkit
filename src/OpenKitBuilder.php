@@ -74,9 +74,7 @@ class OpenKitBuilder
         $spec = [
             'openapi' => '3.0.3',
             'info' => config('openkit.info'),
-            'servers' => [
-                ['url' => url('/'), 'description' => 'Servidor Principal'],
-            ],
+            'servers' => config('openkit.servers'),
             'tags' => $this->tags,
             'paths' => [],
             'components' => [],

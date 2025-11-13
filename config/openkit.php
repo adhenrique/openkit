@@ -46,6 +46,23 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Servidores
+    |--------------------------------------------------------------------------
+    |
+    | Define os servidores que serão exibidos na documentação OpenAPI, incluindo
+    | a URL base e uma descrição opcional para identificar o ambiente.
+    |
+    */
+
+    'servers' => [
+        [
+            'url' => env('OPENKIT_SERVER_URL', env('APP_URL', 'http://localhost')),
+            'description' => env('OPENKIT_SERVER_DESCRIPTION', 'Servidor principal'),
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Caminho das definições OpenAPI
     |--------------------------------------------------------------------------
     |
