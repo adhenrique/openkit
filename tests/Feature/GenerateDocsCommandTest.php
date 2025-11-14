@@ -3,13 +3,15 @@
 namespace OpenKit\Tests\Feature;
 
 use Illuminate\Support\Facades\File;
-use OpenKit\Facades\OpenKit;
 use OpenKit\Tests\TestCase;
 
 class GenerateDocsCommandTest extends TestCase
 {
     /** @var string O caminho completo para o arquivo JSON */
     private string $jsonPath;
+
+    /** @var string O caminho do arquivo com as definições */
+    private string $definitionsPath;
 
     protected function setUp(): void
     {
@@ -21,9 +23,15 @@ class GenerateDocsCommandTest extends TestCase
         // Define o caminho (public_path() funciona no Testbench)
         $this->jsonPath = public_path($fileName);
 
+        $this->definitionsPath = config('openkit.definitions', base_path('routes/openkit.php'));
+
         // Garante que o arquivo não exista antes do teste
         if (File::exists($this->jsonPath)) {
             File::delete($this->jsonPath);
+        }
+
+        if (File::exists($this->definitionsPath)) {
+            File::delete($this->definitionsPath);
         }
     }
 
@@ -32,6 +40,11 @@ class GenerateDocsCommandTest extends TestCase
         if (File::exists($this->jsonPath)) {
             File::delete($this->jsonPath);
         }
+
+        if (File::exists($this->definitionsPath)) {
+            File::delete($this->definitionsPath);
+        }
+
         parent::tearDown();
     }
 
@@ -41,15 +54,7 @@ class GenerateDocsCommandTest extends TestCase
         // Garante que o arquivo não existe
         $this->assertFalse(File::exists($this->jsonPath));
 
-        // Define uma rota de exemplo usando a Facade
-        // (Isso popula o singleton OpenKitBuilder)
-        OpenKit::defineTag('TestTag', 'Tag de Teste');
-        OpenKit::path('/api/test-command', 'get')
-            ->summary('Teste do Comando')
-            ->tag('TestTag')
-            ->withResponse(200, function ($res) {
-                $res->description('Comando OK');
-            });
+        File::copy(__DIR__.'/../stubs/test_definitions.php', $this->definitionsPath);
 
         // 2. ACT
         // Roda o comando e captura a saída do console
@@ -77,11 +82,11 @@ class GenerateDocsCommandTest extends TestCase
         $this->assertEquals('TestTag', $data['tags'][0]['name']);
 
         // Verifica o 'path' que definimos
-        $this->assertArrayHasKey('/api/test-command', $data['paths']);
-        $pathData = $data['paths']['/api/test-command']['get'];
-        $this->assertEquals('Teste do Comando', $pathData['summary']);
+        $this->assertArrayHasKey('/api/new', $data['paths']);
+        $pathData = $data['paths']['/api/new']['get'];
+        $this->assertEquals('Nova Rota', $pathData['summary']);
         $this->assertEquals(['TestTag'], $pathData['tags']);
-        $this->assertEquals('Comando OK', $pathData['responses']['200']['description']);
+        $this->assertEquals('Rota OK', $pathData['responses']['200']['description']);
     }
 
     public function test_it_overwrites_an_existing_file()
@@ -91,7 +96,7 @@ class GenerateDocsCommandTest extends TestCase
         $this->assertTrue(File::exists($this->jsonPath));
 
         // Define uma nova rota
-        OpenKit::path('/api/new', 'get')->summary('Nova Rota');
+        File::copy(__DIR__.'/../stubs/test_definitions.php', $this->definitionsPath);
 
         // 2. Act
         $this->artisan('openkit:generate')->assertExitCode(0);

@@ -41,10 +41,5 @@ class OpenKitServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../resources/views' => resource_path('views/vendor/openkit'),
         ], 'openkit-views');
-
-        $definitions_path = config('openkit.definitions');
-        if (file_exists($definitions_path)) {
-            require $definitions_path;
-        }
     }
 }

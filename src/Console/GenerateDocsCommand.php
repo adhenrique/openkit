@@ -12,9 +12,18 @@ class GenerateDocsCommand extends Command
 
     protected $description = 'Gera o arquivo openapi.json com base nas definições.';
 
-    public function handle()
+    public function handle(): int
     {
         $this->info('Gerando documentação OpenAPI...');
+        $definitions_path = config('openkit.definitions');
+
+        if (file_exists($definitions_path)) {
+            require $definitions_path;
+        } else {
+            $this->error("Arquivo de definições não encontrado em: $definitions_path");
+
+            return 1;
+        }
 
         $spec = OpenKit::generate();
         $fileName = config('openkit.json_file_name', 'openapi.json');
